@@ -32,6 +32,7 @@ interface CampaignDetailResponse {
   data: Campaign;
 }
 
+
 const CampaignList = () => {
   const { mailerliteApiKey } = getPreferenceValues();
   const {
@@ -50,7 +51,11 @@ const CampaignList = () => {
   }
 
   if (error) {
-    showToast(Toast.Style.Failure, "Failed to fetch campaigns", error.message);
+    if (error.message.includes("401")) {
+      showToast(Toast.Style.Failure, "Invalid API Key", "Please check your MailerLite API key in preferences.");
+    } else {
+      showToast(Toast.Style.Failure, "Failed to fetch campaigns", error.message);
+    }
     return <List.EmptyView title={`Failed to load campaigns: ${error.message}`} />;
   }
 
@@ -93,7 +98,11 @@ const CampaignDetails = ({ campaignId }: { campaignId: string }) => {
   }
 
   if (error) {
-    return <Detail markdown="Failed to load campaign details." />;
+    if (error.message.includes("401")) {
+      return <Detail markdown="Invalid API Key. Please check your MailerLite API key in preferences." />;
+    } else {
+      return <Detail markdown="Failed to load campaign details." />;
+    }
   }
 
   if (!campaignData) {
