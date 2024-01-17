@@ -78,6 +78,10 @@ const CampaignList = () => {
     }
   }, [error]);
 
+  if (isLoading) {
+    return <Detail isLoading />;
+  }
+
   const campaigns = campaignListData?.data || [];
 
   return (
